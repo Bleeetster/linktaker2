@@ -1,0 +1,18 @@
+{
+	"manifest_version": 3,
+	"name": "link taker2",
+	"version": "1.0",
+	"description": "Extension that allows you easily put your links in a list",
+	"permissions": [
+		"scripting",
+		"tabs"
+	],
+	"background": {
+		"service_worker": "service-worker.js",
+		"type": "module"
+	},
+	"action": {
+		"default_title": "Link taker",
+		"default_popup": "popup.html"
+	}
+}
