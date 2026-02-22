@@ -20,10 +20,15 @@ export class Storage extends iStorage {
 	// }
 	async add(...urls) {
 		urls.forEach( async (url) => {
-			const len = await chrome.storage.local.getKeys()
-			len = len.length
+			const keysArray = await chrome.storage.local.getKeys()
+			let len = keysArray.length
 			await chrome.storage.local.set({[len+1]: url });
 		})
+	}
+	async add(url) {
+		let len = await chrome.storage.local.getKeys()
+		len = len.length
+		await chrome.storage.local.set({[len+1]: url });
 	}
 // 	async remove(...keys) {
 // 		await chrome.storage.local.remove(keys.map((key) => String(key)));

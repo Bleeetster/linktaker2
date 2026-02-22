@@ -12,5 +12,4 @@ export class Logger extends iLogger {
 	}
 }
 export class ErrorHandler extends iErrorHandler {
-	logError
 }

@@ -6,8 +6,8 @@ import { Logger, ErrorHandler } from './modules/logger.js'
 
 const logger = new Logger()
 const errorHandler = new ErrorHandler()
-const saver = new saveUrl(logger, errorHandler)
-const downloader = new Downloader(logger, errorHandler)
 const storage = new Storage(logger, errorHandler)
+const saver = new saveUrl(logger, errorHandler, storage)
+const downloader = new Downloader(logger, errorHandler, storage)
 
-new mainController(saver, downloader, storage)
+new mainController(saver, downloader)

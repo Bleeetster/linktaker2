@@ -6,10 +6,12 @@ export class mainController {
 		this.main()
 	}
 	async main() {
-		chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		chrome.runtime.onMessage.addListener((message, sender, sendRes) => {
 			if (message === "SaveUrl") {
-				const isSaved = this.saver.saveUrl();
-				sendResponse({ returnCode: isSaved })
+				this.saver.saveUrl()
+					.then(res => sendRes({ returnCode: 0}))
+					.catch(res => sendRes({ returnCode: 1}));
+				return true;
 			}
 		})
 	}
