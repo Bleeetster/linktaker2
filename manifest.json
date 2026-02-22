@@ -5,7 +5,8 @@
 	"description": "Extension that allows you easily put your links in a list",
 	"permissions": [
 		"scripting",
-		"tabs"
+		"tabs",
+		"storage"
 	],
 	"background": {
 		"service_worker": "service-worker.js",
