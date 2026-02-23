@@ -7,12 +7,19 @@ export class mainController {
 	}
 	async main() {
 		chrome.runtime.onMessage.addListener((message, sender, sendRes) => {
-			if (message === "SaveUrl") {
+			switch (message) {
+				case "SaveUrl":
 				this.saver.saveUrl()
 					.then(res => sendRes({ returnCode: 0}))
 					.catch(res => sendRes({ returnCode: 1}));
-				return true;
+					break;
+				case "downloadList":
+					this.downloader.downloadURLList()
+					.then( res => sendRes({ returnCode: 0}))
+					.catch( res => sendRes({ returnCode: 1}));
+					break;
 			}
+			return true;
 		})
 	}
 }
