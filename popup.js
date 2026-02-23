@@ -1,15 +1,22 @@
-const saveButton = document.getElementById("saveButton");
-saveButton.addEventListener("click", async () => {
-	console.log("test");
-	chrome.runtime.sendMessage("SaveUrl", (res) => {
+async function buttonFunc(message, button) {
+	chrome.runtime.sendMessage(message, (res) => {
 		if (res.returnCode > 0) {
-			saveButton.style.backgroundColor = "red";
+			button.style.backgroundColor = "red";
 		}
 		else {
-			saveButton.style.backgroundColor = "green";
+			button.style.backgroundColor = "green";
 		}
 		setTimeout( () => {
-			saveButton.style.backgroundColor = "buttonFace";
+			button.style.backgroundColor = "buttonFace";
 		}, 700 );
 	})
+}
+const saveButton = document.getElementById("saveButton");
+saveButton.addEventListener("click", async () => {
+	await buttonFunc("SaveUrl", saveButton);
+})
+
+const downloadButton = document.getElementById("downloadButton");
+downloadButton.addEventListener("click", async () => {
+	buttonFunc("downloadList", downloadButton);
 })
