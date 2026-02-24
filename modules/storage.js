@@ -2,18 +2,21 @@ export class iStorage {
 	constructor( logger, errorhandler) {
 		this.logger = logger;
 		this.errorhandler = errorhandler;
-
-		this.observe();
 	}
 	async add(...urls) { throw new Error('Storage is not implemented') }
-	async insert(id, url) { throw new Error('Storage is not implemented') }
-	async get(key) { throw new Error('Storage is not implemented') }
-	async remove(key) { throw new Error('Storage is not implemented') }
+	async insert(id, ...urls) { throw new Error('Storage is not implemented') }
+	async get() { throw new Error('Storage is not implemented') }
+	async remove(...keys) { throw new Error('Storage is not implemented') }
 	async clear() { throw new Error('Storage is not implemented') }
 	async observe() { throw new Error('Storage is not implemented') }
 }
 
 export class Storage extends iStorage {
+	constructor( logger, errorhandler) {
+		super(logger,errorhandler);
+
+		this.observe();
+	}
 	// async observe() {
 	// 	chrome.storage.onChanged.addListener( (changes, namespace) => {
 	// 	})
@@ -24,11 +27,6 @@ export class Storage extends iStorage {
 			let len = keysArray.length
 			await chrome.storage.local.set({[len+1]: url });
 		})
-	}
-	async add(url) {
-		let len = await chrome.storage.local.getKeys()
-		len = len.length
-		await chrome.storage.local.set({[len+1]: url });
 	}
 // 	async remove(...keys) {
 // 		await chrome.storage.local.remove(keys.map((key) => String(key)));
