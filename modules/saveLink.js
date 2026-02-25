@@ -14,6 +14,7 @@ export class saveUrl extends IsaveLink {
 	async saveUrl() {
 		try {
 			const tab = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+			this.logger.log(`Saving [${tab[0].url}] into storage`)
 			const output = new urlObject(tab[0].title, tab[0].url);
 			await this.storage.add(output);
 		} 

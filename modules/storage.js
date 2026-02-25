@@ -22,15 +22,27 @@ export class Storage extends iStorage {
 	// 	})
 	// }
 	async add(...urls) {
-		urls.forEach( async (url) => {
+		for (let i = 0; i < urls.length; i++) {
 			const keysArray = await chrome.storage.local.getKeys()
 			let len = keysArray.length
-			await chrome.storage.local.set({[len+1]: url });
-		})
+			await chrome.storage.local.set({[len]: urls[i] });
+		}
 	}
-// 	async remove(...keys) {
-// 		await chrome.storage.local.remove(keys.map((key) => String(key)));
-// 	}
+	async get() {
+		const urls = await chrome.storage.local.get(null);
+		return Object.values(urls);
+	}
+	async remove(...keys) {
+		let urls = await this.get();
+		let output = new Array()
+		urls.forEach( (url, index) => {
+			if (keys.find( (idx) => index === idx))
+				return;
+			output.push(url)
+		})
+		chrome.storage.local.clear();
+		this.add(...output);
+	}
 // 	usefull function might use later
 // 	async switch(key1, key2) {
 // 		console.log('test');
