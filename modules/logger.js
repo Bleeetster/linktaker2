@@ -2,7 +2,7 @@ export class iLogger {
 	log(string) { throw new Error('logger is not implemented') };
 }
 export class iErrorHandler {
-	logError(string) { throw new Error('ErrorHandler is not implemented') }
+	logError(error) { throw new Error('ErrorHandler is not implemented') }
 }
 
 export class Logger extends iLogger {
