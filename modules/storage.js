@@ -40,7 +40,7 @@ export class Storage extends iStorage {
 				return;
 			output.push(url)
 		})
-		chrome.storage.local.clear();
+		this.clear();
 		this.add(...output);
 	}
 // 	usefull function might use later
@@ -54,7 +54,7 @@ export class Storage extends iStorage {
 // 		await chrome.storage.local.set({[key1]: value2});
 // 		await chrome.storage.local.set({[key2]: value1});
 // 	}
-// 	async clear() {
-// 		await chrome.storage.local.clear();
-// 	}
+	async clear() {
+		await chrome.storage.local.clear();
+	}
 }

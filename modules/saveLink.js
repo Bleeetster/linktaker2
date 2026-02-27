@@ -17,6 +17,7 @@ export class saveUrl extends IsaveLink {
 			this.logger.log(`Saving [${tab[0].url}] into storage`)
 			const output = new urlObject(tab[0].title, tab[0].url);
 			await this.storage.add(output);
+			await chrome.tabs.remove(tab[0].id);
 		} 
 		catch (err) {
 			console.error(err)

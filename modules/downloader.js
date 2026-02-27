@@ -14,7 +14,7 @@ export class Downloader extends iDownloader {
 			storageOutput.forEach( (obj) => {
 				urls += `${obj.url}\n`
 			})
-			await chrome.downloads.download({
+			const download = await chrome.downloads.download({
 				url: 'data:text/plain,' + encodeURIComponent(urls),
 				filename: `sites-${new Date().toISOString().replace(/[:.]/g, '-')}`
 			})
