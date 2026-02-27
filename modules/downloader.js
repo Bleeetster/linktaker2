@@ -11,16 +11,17 @@ export class Downloader extends iDownloader {
 		try {
 			const storageOutput = await this.storage.get();
 			let urls = new String();
+			const filename = `sites-${new Date().toISOString().replace(/[:.]/g, '-').slice(0,-5)}.txt`;
 			storageOutput.forEach( (obj) => {
 				urls += `${obj.url}\n`
 			})
 			const download = await chrome.downloads.download({
 				url: 'data:text/plain,' + encodeURIComponent(urls),
-				filename: `sites-${new Date().toISOString().replace(/[:.]/g, '-')}`
+				filename: filename
 			})
+			this.logger.log(`File was saved as [${filename}]`);
 		}
 		catch (err) {
-			console.error(err);
 			this.errorHandler.logError(err);
 		}
 	}

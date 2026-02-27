@@ -20,7 +20,6 @@ export class saveUrl extends IsaveLink {
 			await chrome.tabs.remove(tab[0].id);
 		} 
 		catch (err) {
-			console.error(err)
 			this.errorHandler.logError(err)
 		}
 	}

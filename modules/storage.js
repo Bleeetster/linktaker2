@@ -1,6 +1,6 @@
 export class iStorage {
-	constructor( logger, errorhandler) {
-		this.logger = logger;
+	constructor( loger, errorhandler) {
+		this.loger = logger;
 		this.errorhandler = errorhandler;
 	}
 	async add(...urls) { throw new Error('Storage is not implemented') }
@@ -12,36 +12,52 @@ export class iStorage {
 }
 
 export class Storage extends iStorage {
-	constructor( logger, errorhandler) {
-		super(logger,errorhandler);
+	constructor( loger, errorhandler) {
+		super(loger,errorhandler);
 
 		this.observe();
 	}
-	// async observe() {
-	// 	chrome.storage.onChanged.addListener( (changes, namespace) => {
-	// 	})
-	// }
+	async observe() {
+		chrome.storage.onChanged.addListener( (changes, namespace) => {
+			console.log(changes) // temporary replacement for proper loging
+		})
+	}
 	async add(...urls) {
-		for (let i = 0; i < urls.length; i++) {
-			const keysArray = await chrome.storage.local.getKeys()
-			let len = keysArray.length
-			await chrome.storage.local.set({[len]: urls[i] });
+		try {
+			for (let i = 0; i < urls.length; i++) {
+				const keysArray = await chrome.storage.local.getKeys()
+				let len = keysArray.length
+				await chrome.storage.local.set({[len]: urls[i] });
+			}
+		}
+		catch (err) {
+			this.errorhandler.logError(err)
 		}
 	}
 	async get() {
-		const urls = await chrome.storage.local.get(null);
-		return Object.values(urls);
+		try {
+			const urls = await chrome.storage.local.get(null);
+			return Object.values(urls);
+		}
+		catch (err) {
+			this.errorhandler.logError(err)
+		}
 	}
 	async remove(...keys) {
-		let urls = await this.get();
-		let output = new Array()
-		urls.forEach( (url, index) => {
-			if (keys.find( (idx) => index === idx))
-				return;
-			output.push(url)
-		})
-		this.clear();
-		this.add(...output);
+		try {
+			let urls = await this.get();
+			let output = new Array()
+			urls.forEach( (url, index) => {
+				if (keys.find( (idx) => index === idx))
+					return;
+				output.push(url)
+			})
+			this.clear();
+			this.add(...output);
+		}
+		catch (err) {
+			this.errorhandler.logError(err)
+		}
 	}
 // 	usefull function might use later
 // 	async switch(key1, key2) {
