@@ -1,6 +1,6 @@
 export class iStorage {
 	constructor( loger, errorhandler) {
-		this.loger = logger;
+		this.loger = loger;
 		this.errorhandler = errorhandler;
 	}
 	async add(...urls) { throw new Error('Storage is not implemented') }

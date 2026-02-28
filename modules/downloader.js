@@ -17,9 +17,11 @@ export class Downloader extends iDownloader {
 			})
 			const download = await chrome.downloads.download({
 				url: 'data:text/plain,' + encodeURIComponent(urls),
-				filename: filename
+				filename: filename,
+				saveAs: false
 			})
 			this.logger.log(`File was saved as [${filename}]`);
+			this.storage.clear();
 		}
 		catch (err) {
 			this.errorHandler.logError(err);
