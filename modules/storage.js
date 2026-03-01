@@ -15,6 +15,8 @@ export class Storage extends iStorage {
 	constructor( loger, errorhandler) {
 		super(loger,errorhandler);
 
+		this.head = null;
+		this.current = null;
 		this.observe();
 	}
 	async observe() {
@@ -22,12 +24,37 @@ export class Storage extends iStorage {
 			console.log(changes) // temporary replacement for proper loging
 		})
 	}
+	_generateUUID() {
+		return Date.now().toString();
+	}
+	async _getHead() {
+		const response = await chrome.storage.local.get(["head","current"]);
+		if (!(response.hasOwnProperty("head") & response.hasOwnProperty("current")))
+			return;
+		this.head = response["head"];
+		this.current = response["current"];
+	}
+	async _setHead() {
+		await chrome.storage.local.set({head: this.head, current: this.current});
+	}
 	async add(...urls) {
 		try {
+			await this._getHead();
 			for (let i = 0; i < urls.length; i++) {
-				const keysArray = await chrome.storage.local.getKeys()
-				let len = keysArray.length
-				await chrome.storage.local.set({[len]: urls[i] });
+				const uuid = this._generateUUID();
+				if (this.head == null) {
+					this.head = uuid;
+				}
+				else {
+					const cur = await chrome.storage.local.get(this.current.toString());
+					for (let [key, value] of Object.entries(cur)) {
+						value.next = uuid;
+						await chrome.storage.local.set({[key]: value});
+					}
+				}
+				await chrome.storage.local.set({[uuid]: { url: urls[i], next: null}});
+				this.current = uuid;
+				await this._setHead();
 			}
 		}
 		catch (err) {
@@ -36,8 +63,16 @@ export class Storage extends iStorage {
 	}
 	async get() {
 		try {
+			await this._getHead();
 			const urls = await chrome.storage.local.get(null);
-			return Object.values(urls);
+			let arr = new Array();
+			let i = this.head;
+			while (i != null) {
+				console.log(urls[i]);
+				arr.push(urls[i].url)
+				i = urls[i].next
+			}
+			return arr;
 		}
 		catch (err) {
 			this.errorhandler.logError(err)
