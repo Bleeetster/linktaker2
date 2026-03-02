@@ -18,5 +18,16 @@ saveButton.addEventListener("click", async () => {
 
 const downloadButton = document.getElementById("downloadButton");
 downloadButton.addEventListener("click", async () => {
-	buttonFunc("downloadList", downloadButton);
+	await buttonFunc("downloadList", downloadButton);
+})
+
+const manageButton = document.getElementById("manageButton");
+manageButton.addEventListener("click", async () => {
+	await chrome.windows.create({
+		type: "popup",
+		url: "storage-manager.html",
+		width: 350,
+		height: 500,
+		focused: true
+	})
 })
