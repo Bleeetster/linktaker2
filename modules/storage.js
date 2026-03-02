@@ -79,16 +79,29 @@ export class Storage extends iStorage {
 		}
 	}
 	async remove(...keys) {
+		await this._getHead();
 		try {
-			let urls = await this.get();
-			let output = new Array()
-			urls.forEach( (url, index) => {
-				if (keys.find( (idx) => index === idx))
-					return;
-				output.push(url)
-			})
-			this.clear();
-			this.add(...output);
+			const urls = await chrome.storage.local.get(null);
+			console.log(urls);
+			let pointer = this.head;
+			for (const key of keys) {
+				let tail;
+				for (let i = 0; i < key; i++)
+				{
+					tail = pointer;
+					pointer = urls[pointer].next;
+				}
+				if (tail)
+				{
+					if ( pointer === this.current )
+						this.current = tail
+					await chrome.storage.local.set({ [tail]: {next: urls[pointer].next, url: urls[pointer].url}});
+				}
+				if ( pointer === this.head )
+					this.head = urls[pointer].next;
+				await chrome.storage.local.remove(pointer);
+				await this._setHead();
+			}
 		}
 		catch (err) {
 			this.errorhandler.logError(err)
