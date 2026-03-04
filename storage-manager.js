@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 	await renderLinks(await loadLinks());
 });
 
+window.addEventListener('blur', (e) => {
+	console.log(e);
+	window.close();
+})
+
 // Очистить весь список
 clearAllBtn.addEventListener('click', async () => {
 	await storage.clear();
