@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Очистить весь список
 clearAllBtn.addEventListener('click', async () => {
 	await storage.clear();
-	await renderLinks(await loadLinks());
+	await renderLinks([]);
 });
 
 // Обработка кликов по списку (делегирование)
