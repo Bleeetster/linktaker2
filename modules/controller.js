@@ -1,13 +1,18 @@
 export class mainController {
-  constructor(saver_, downloader_) {
+  constructor(saver_, downloader_, storage_) {
     this.saver = saver_;
     this.downloader = downloader_;
+    this.storage = storage_
 
     this.main()
   }
   async main() {
     chrome.runtime.onMessage.addListener((message, sender, sendRes) => {
-      switch (message) {
+      const messageArr = message.split('/');
+      const command = messageArr[0]
+      console.log(messageArr)
+
+      switch (command) {
         case "SaveUrl":
           this.saver.saveUrl()
             .then(() => sendRes({ returnCode: 0 }))
@@ -22,6 +27,19 @@ export class mainController {
           this.saver.saveUrls()
             .then(() => sendRes({ returnCode: 0 }))
             .catch(() => sendRes({ returnCode: 1 }));
+          break;
+        case "getLinks":
+          this.storage.get()
+            .then((resp) => sendRes({ list: resp }))
+          break;
+        case "remove":
+          this.storage.remove(messageArr[1])
+            .then(() => sendRes({ message: "Node deleted" }))
+          break;
+        case "clearList":
+          this.storage.clear()
+            .then(() => sendRes({ message: "List cleared" }))
+          break;
       }
       return true;
     })

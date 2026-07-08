@@ -1,9 +1,3 @@
-import { Storage } from "./modules/storage.js"
-import { Loger, ErrorHandler } from "./modules/logger.js"
-const loger = new Loger()
-const errorHandler = new ErrorHandler()
-const storage = new Storage(loger, errorHandler)
-
 const linksList = document.getElementById('linksList');
 const clearAllBtn = document.getElementById('clearAllBtn');
 const template = document.getElementById('linkTemplate');
@@ -20,7 +14,7 @@ window.addEventListener('blur', (e) => {
 
 // Очистить весь список
 clearAllBtn.addEventListener('click', async () => {
-  await storage.clear();
+  await chrome.runtime.sendMessage('clearList')
   await renderLinks([]);
 });
 
@@ -36,8 +30,9 @@ linksList.addEventListener('click', async (e) => {
   console.log(target);
   if (target.classList.contains('delete-btn')) {
     links.splice(index, 1);
-    await storage.remove(index);
+    console.log(links)
     await renderLinks(links);
+    await chrome.runtime.sendMessage(`remove/{index}`)
   }
   // else if (target.classList.contains('move-up-btn')) {
   // if (index > 0) {
@@ -56,10 +51,10 @@ linksList.addEventListener('click', async (e) => {
 // Получить массив ссылок из localStorage
 async function loadLinks() {
   try {
-    const data = await storage.get();
-    return data;
+    const data = await chrome.runtime.sendMessage('getLinks')
+    return data.list
   } catch (e) {
-    errorHandler.logError(e);
+    console.error(e);
     return [];
   }
 }
