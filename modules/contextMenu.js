@@ -11,7 +11,7 @@ export class ContextMenu {
     chrome.contextMenus.onClicked.addListener((info, tab) => {
       if (info.menuItemId === "save-element") {
         const elemTitle = tab.title;
-        const elemUrl = info.linkUrl || srcUrl || pageUrl;
+        const elemUrl = info.linkUrl || info.srcUrl || info.pageUrl;
         const elem = new urlObject(elemTitle, elemUrl)
         this.storage.add(elem)
       }
