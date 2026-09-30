@@ -82,7 +82,11 @@ async function renderLinks(links) {
     const titleDiv = clone.querySelector('.link-title');
     const urlDiv = clone.querySelector('.link-url');
     titleDiv.textContent = link.title || link.url || 'Без названия';
-    urlDiv.textContent = link.url || '';
+    const urlElement = document.createElement('a');
+    urlElement.href = link.url || '';
+    urlElement.target = "_blank"
+    urlElement.textContent = link.url || '';
+    urlDiv.appendChild(urlElement)
 
     linksList.appendChild(clone);
   });
